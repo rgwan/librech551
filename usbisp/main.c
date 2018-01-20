@@ -318,7 +318,26 @@ int main(int argc, char **argv)
 		}
 		printf("Verify done\n");
 	}
-	
+	if(require_dataflash_read)
+	{
+		printf("Read from chip data flash\n");
+		
+		fp = fopen(df_read_file_name, "wb+");
+		if(!fp)
+		{
+			fprintf(stderr, "Can't create read back file!\n");
+			goto out;
+		}
+		write_to_device(read_df_cmd, 2);
+		
+		read_from_device(inbuffer, 64);
+		fwrite(inbuffer, 1, 64, fp);
+		read_from_device(inbuffer, 64);
+		fwrite(inbuffer, 1, 64, fp);
+		fclose(fp);
+		fp = 0;
+		
+	}
 	if(require_dataflash_erase || require_dataflash_write)
 	{
 		write_to_device(claim_device_cmd, 4);
@@ -420,26 +439,6 @@ int main(int argc, char **argv)
 			goto out;
 		}	
 		printf("Verify data flash done\n");
-	}
-	if(require_dataflash_read)
-	{
-		printf("Read from chip data flash\n");
-		
-		fp = fopen(df_read_file_name, "wb+");
-		if(!fp)
-		{
-			fprintf(stderr, "Can't create read back file!\n");
-			goto out;
-		}
-		write_to_device(read_df_cmd, 2);
-		
-		read_from_device(inbuffer, 64);
-		fwrite(inbuffer, 1, 64, fp);
-		read_from_device(inbuffer, 64);
-		fwrite(inbuffer, 1, 64, fp);
-		fclose(fp);
-		fp = 0;
-		
 	}
 	
 	if(require_exec)
