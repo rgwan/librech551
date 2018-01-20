@@ -83,14 +83,14 @@ void hexdump(unsigned char *data, int size)
 void printusage(char *selfname)
 {
 	printf("Usage %s: [OPTIONS]\n", selfname);
-	printf("\t-f <binary_file>\tSpecify your binary file to be flash to the chip\n");
-	printf("\t-d <binary_file>\tSpecify dataflash file to be flash to the chip\n");
-	printf("\t-D <binary_file>\tSpecify dataflash file to be read from the chip\n");
+	printf("\t-f <binary_file>\tSpecify your program file to be flash to the chip\n");
+	printf("\t-d <binary_file>\tSpecify data flash file to be flash to the chip\n");
+	printf("\t-D <binary_file>\tSpecify data flash file to be read from the chip\n");
 	printf("\t-e\t\t\tErase chip\n");
 	printf("\t-w\t\t\tErase data flash\n");
 	printf("\t-h\t\t\tShow this message and exit\n");
-	printf("\t-g\t\t\tRun your program after download\n\n");
-	printf("Copyright 2018\tZhiyuan Wan, GPL v3 License, 0..0\n");
+	printf("\t-g\t\t\tRun your program after the device has been programmed\n\n");
+	printf("Copyright 2018\tZhiyuan Wan, GPL v3 License, all operations must to based on the basic law, 0..0\n");
 }
 
 int main(int argc, char **argv)
@@ -337,6 +337,8 @@ int main(int argc, char **argv)
 		fclose(fp);
 		fp = 0;
 		
+		printf("Read done\n");
+		
 	}
 	if(require_dataflash_erase || require_dataflash_write)
 	{
@@ -443,7 +445,7 @@ int main(int argc, char **argv)
 	
 	if(require_exec)
 	{
-		printf("Let target run\n");
+		printf("Let target run, keep it at Hong Kong reporter speed!\n");
 		write_to_device(run_cmd, 4);
 	}
 	
