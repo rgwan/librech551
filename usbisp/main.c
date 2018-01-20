@@ -133,15 +133,15 @@ int main(int argc, char **argv)
 			case 'e':/* 仅擦除芯片 */
 				require_erase = 1;
 				break;
-			case 'D':
+			case 'D':/* 读DataFlash */
 				require_dataflash_read = 1;
 				strncpy(df_read_file_name, optarg, 255);
 				break;
-			case 'd':
+			case 'd':/* 写DataFlash */
 				require_dataflash_write = 1;
 				strncpy(df_write_file_name, optarg, 255);
 				break;
-			case 'w':
+			case 'w':/* 擦DataFlash */
 				require_dataflash_erase = 1;
 				break;				
 			default:
@@ -212,9 +212,10 @@ int main(int argc, char **argv)
 	write_to_device(detect_chip_cmd, 63);
 	read_from_device(inbuffer, 2);
 	//hexdump(inbuffer, 2);
+	printf("Libre CH551 Flasher 2018\n");
 	
 	if(inbuffer[0] == 0x51)
-		printf("Detected Chip CH551\n\n");
+		printf("Detected device CH551\n");
 	else
 	{
 		fprintf(stderr, "This chip is currently not support in this program\n");
@@ -223,6 +224,7 @@ int main(int argc, char **argv)
 
 	write_to_device(use_interface_cmd, 2);
 	read_from_device(inbuffer, 2);
+	printf("Device bootloader version: %d.%d\n\n", inbuffer[0] >> 4, inbuffer[0] & 0xf);
 	//hexdump(inbuffer, 2);
 	
 	write_to_device(key_input_cmd, 6); /* Input a dummy key that let we doesn't need to 'encrypt' */
