@@ -14,7 +14,7 @@ Build & Usage
 
 Build:Type 'make' in "usbisp" directory.
 
-Install: Copy isptool to PATH by yourself.
+Install: Copy wchisptool to PATH by yourself.
 
 In Linux, there's no driver required.
 

@@ -40,7 +40,7 @@ static char read_df_cmd[2] = {0xb7, 0x00};
 static char claim_device_cmd[4] = {0xa5, 0x02, 0x00, 0x00};
 static char erase_df_cmd[4] ={0xb5, 0x02, 0x00, 0xc0};
 static char write_df_cmd[64] = {0xb6, 0x00, 0x00, 0x00}; /* cmd, length, addrl, addrh, data */
-;
+
 int write_to_device(unsigned char *data, int size)
 {
 	int actual_length;
@@ -335,6 +335,8 @@ int main(int argc, char **argv)
 			fprintf(stderr, "Erase data flash failed!\n");
 			goto out;
 		}	
+		
+		printf("Erase done\n");
 	}
 	
 	if(require_dataflash_write)
