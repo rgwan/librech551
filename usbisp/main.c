@@ -90,7 +90,7 @@ void printusage(char *selfname)
 	printf("\t-w\t\t\tErase data flash\n");
 	printf("\t-h\t\t\tShow this message and exit\n");
 	printf("\t-g\t\t\tRun your program after the device has been programmed\n\n");
-	printf("Copyright 2018\tZhiyuan Wan, GPL v3 License, all operations must to based on the basic law, 0..0\n");
+	printf("Copyright 2018\tZhiyuan Wan, GPL v3 License, all operations must to be based on the basic law, 0..0\n");
 }
 
 int main(int argc, char **argv)
