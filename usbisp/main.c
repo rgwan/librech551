@@ -87,6 +87,7 @@ void printusage(char *selfname)
 	printf("\t-d <binary_file>\tSpecify dataflash file to be flash to the chip\n");
 	printf("\t-D <binary_file>\tSpecify dataflash file to be read from the chip\n");
 	printf("\t-e\t\t\tErase chip\n");
+	printf("\t-w\t\t\tErase data flash\n");
 	printf("\t-h\t\t\tShow this message and exit\n");
 	printf("\t-g\t\t\tRun your program after download\n\n");
 	printf("Copyright 2018\tZhiyuan Wan, GPL v3 License, 0..0\n");
@@ -111,13 +112,14 @@ int main(int argc, char **argv)
 	int require_erase = 0;
 	int require_dataflash_read = 0;
 	int require_dataflash_write = 0;
+	int require_dataflash_erase = 0;
 	
 	char df_read_file_name[255];
 	char df_write_file_name[255];
 	
 	char ch;
 	
-	while ((ch = getopt(argc,argv,"f:gehD:d:")) != -1)  
+	while ((ch = getopt(argc,argv,"f:gewhD:d:")) != -1)  
 	{  
 		switch(ch)  
 		{  
@@ -139,6 +141,9 @@ int main(int argc, char **argv)
 				require_dataflash_write = 1;
 				strncpy(df_write_file_name, optarg, 255);
 				break;
+			case 'w':
+				require_dataflash_erase = 1;
+				break;				
 			default:
 				printusage(argv[0]);
 				exit(0);
@@ -232,7 +237,7 @@ int main(int argc, char **argv)
 			erase_page_cmd[3] = i * 4;
 			write_to_device(erase_page_cmd, 4);
 			read_from_device(inbuffer, 2);
-			//hexdump(inbuffer, 2);	
+			//hexdump(erase_page_cmd, 4);	
 			if(inbuffer[0] != 0x00)
 			{
 				fprintf(stderr, "Erase failed!\n");
@@ -311,6 +316,25 @@ int main(int argc, char **argv)
 		}
 		printf("Verify done\n");
 	}
+	
+	if(require_dataflash_erase || require_dataflash_write)
+	{
+		write_to_device(claim_device_cmd, 4);
+		read_from_device(inbuffer, 2);
+		write_to_device(key_input_cmd, 6); /* Input a dummy key that let we doesn't need to 'encrypt' */
+		read_from_device(inbuffer, 2);
+		
+		printf("Erasing device's data flash\n");
+		write_to_device(erase_df_cmd, 4); /* Erase DF */
+		read_from_device(inbuffer, 2);	
+		
+		if(inbuffer[0] != 0x00)
+		{
+			fprintf(stderr, "Erase data flash failed!\n");
+			goto out;
+		}	
+	}
+	
 	if(require_dataflash_write)
 	{	
 
@@ -343,21 +367,6 @@ int main(int argc, char **argv)
 		fread(file_buffer, 1, file_length, fp);
 		fclose(fp);
 		fp = 0;
-		
-		printf("Erasing device's data flash\n");
-		
-		write_to_device(claim_device_cmd, 4);
-		read_from_device(inbuffer, 2);
-		write_to_device(key_input_cmd, 6); /* Input a dummy key that let we doesn't need to 'encrypt' */
-		read_from_device(inbuffer, 2);
-		write_to_device(erase_df_cmd, 4); /* Erase DF */
-		read_from_device(inbuffer, 2);		
-		
-		if(inbuffer[0] != 0x00)
-		{
-			fprintf(stderr, "Erase data flash failed!\n");
-			goto out;
-		}
 		
 		printf("Flashing device's data flash\n");
 
