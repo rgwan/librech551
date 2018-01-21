@@ -429,17 +429,20 @@ int main(int argc, char **argv)
 		
 		write_to_device(read_df_cmd, 2);
 		read_from_device(inbuffer, 64);
-		if(memcmp(inbuffer, file_buffer, 64) != 0)
+		if(memcmp(inbuffer, file_buffer, file_length > 64? 64: file_length) != 0)
 		{
 			fprintf(stderr, "Verify data flash failed!\n");
 			goto out;
 		}
 		read_from_device(inbuffer, 64);
-		if(memcmp(inbuffer, file_buffer + 64, 64) != 0)
+		if(file_length > 64)
 		{
-			fprintf(stderr, "Verify data flash failed!\n");
-			goto out;
-		}	
+			if(memcmp(inbuffer, file_buffer + 64, file_length > 64? file_length - 64: 0) != 0)
+			{
+				fprintf(stderr, "Verify data flash failed!\n");
+				goto out;
+			}
+		}
 		printf("Verify data flash done\n");
 	}
 	
