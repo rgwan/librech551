@@ -24,7 +24,7 @@ static int ep_out_addr = 0x02;
 static char detect_chip_cmd[64] = {0xa2, 0x13, 0x55, 0x53, 0x42, 0x20, 0x44, 0x42,
 				   0x47, 0x20, 0x43, 0x48, 0x35, 0x35, 0x39, 0x20,
 				   0x26, 0x20, 0x49, 0x53, 0x50, 0x00}; /* 检测型号 */
-				   
+
 static char use_interface_cmd[2] = {0xbb, 0x00}; /* 使用IF */
 
 static char erase_page_cmd[4] = {0xa9, 0x02, 0x00, 0x00}; /* 1KB/Page? */
@@ -97,37 +97,39 @@ int main(int argc, char **argv)
 {
 	int rc;
 	int i;
-	
+
 	char inbuffer[64];
-	
+
 	char *file_buffer = 0;
-	
+
 	FILE *fp = 0;
 	int file_length;
-	
+
 	char file_name[255];
-	
+
 	int require_download = 0;
 	int require_exec = 0;
 	int require_erase = 0;
 	int require_dataflash_read = 0;
 	int require_dataflash_write = 0;
 	int require_dataflash_erase = 0;
-	
+
 	char df_read_file_name[255];
 	char df_write_file_name[255];
-	
+
+	int device_flash_size = 0;
+	int device_dataflash_size = 0;
 	char ch;
-	
-	while ((ch = getopt(argc,argv,"f:gewhD:d:")) != -1)  
-	{  
-		switch(ch)  
-		{  
+
+	while ((ch = getopt(argc,argv,"f:gewhD:d:")) != -1)
+	{
+		switch(ch)
+		{
 			case 'f':/* 指定文件 */
 				strncpy(file_name, optarg, 255);
 				require_download = 1;
-				break;  
-			case 'g':/* 下载后执行 */  
+				break;
+			case 'g':/* 下载后执行 */
 				require_exec = 1;
 				break;
 			case 'e':/* 仅擦除芯片 */
@@ -143,49 +145,14 @@ int main(int argc, char **argv)
 				break;
 			case 'w':/* 擦DataFlash */
 				require_dataflash_erase = 1;
-				break;				
+				break;
 			default:
 				printusage(argv[0]);
 				exit(0);
 				break;
-				
-		} 
+
+		}
 	}
-        
-	if(require_download)
-	{
-		fp = fopen(file_name, "rb");
-		if(!fp)
-		{
-			fprintf(stderr, "Can't open file '%s' !\n", file_name);
-			exit(1);
-		}
-	
-		fseek(fp, 0, SEEK_END);
-		file_length = ftell(fp);
-		file_buffer = malloc(file_length);
-		
-		if(file_length > 10 * 1024)
-		{
-			fprintf(stderr, "File size exceeded 10KB!\n");
-			exit(1);
-		}
-	
-		if(file_buffer == 0)
-		{
-			fprintf(stderr, "Can't allocate memory!\n");
-			exit(1);
-		}
-		printf("Binary length %d\n", file_length);
-	
-		fseek(fp, 0, SEEK_SET);
-	
-		fread(file_buffer, 1, file_length, fp);
-	
-		fclose(fp);
-		fp = 0;
-	}
-	
 
 	/* Initialize libusb
 	 */
@@ -206,46 +173,96 @@ int main(int argc, char **argv)
 		fprintf(stderr, "Can't find any suitable USB device!\n");
 		goto out;
 	}
-	
+
 	libusb_claim_interface(devh, 0);
-	
+
 	write_to_device(detect_chip_cmd, 63);
 	read_from_device(inbuffer, 2);
 	//hexdump(inbuffer, 2);
 	printf("Libre CH551 Flasher 2018\n");
-	
+
 	if(inbuffer[0] == 0x51)
+	{
 		printf("Detected device CH551\n");
+		device_flash_size = 10240;
+		device_dataflash_size = 128;
+	}
 	else if(inbuffer[0] == 0x52)
+	{
 		printf("Detected device CH552\n");
+		device_flash_size = 16384;
+		device_dataflash_size = 128;
+	}
 	else if(inbuffer[0] == 0x53)
+	{
 		printf("Detected device CH553\n");
+		device_flash_size = 10240;
+		device_dataflash_size = 128;
+	}
 	else if(inbuffer[0] == 0x54)
+	{
 		printf("Detected device CH554\n");
+		device_flash_size = 14336;
+		device_dataflash_size = 128;
+	}
 	else
 	{
 		fprintf(stderr, "The chip id 0x%02X is currently not support in this program\n", inbuffer[0]);
 		goto out;
 	}
 
+	if(require_download)
+	{
+		fp = fopen(file_name, "rb");
+		if(!fp)
+		{
+			fprintf(stderr, "Can't open file '%s' !\n", file_name);
+			exit(1);
+		}
+
+		fseek(fp, 0, SEEK_END);
+		file_length = ftell(fp);
+		file_buffer = malloc(file_length);
+
+		if(file_length > device_flash_size)
+		{
+			fprintf(stderr, "File size exceeded device's capacity!\n");
+			exit(1);
+		}
+
+		if(file_buffer == 0)
+		{
+			fprintf(stderr, "Can't allocate memory!\n");
+			exit(1);
+		}
+		printf("Binary length %d\n", file_length);
+
+		fseek(fp, 0, SEEK_SET);
+
+		fread(file_buffer, 1, file_length, fp);
+
+		fclose(fp);
+		fp = 0;
+	}
+
 	write_to_device(use_interface_cmd, 2);
 	read_from_device(inbuffer, 2);
 	printf("Device bootloader version: %d.%d\n\n", inbuffer[0] >> 4, inbuffer[0] & 0xf);
 	//hexdump(inbuffer, 2);
-	
+
 	write_to_device(key_input_cmd, 6); /* Input a dummy key that let we doesn't need to 'encrypt' */
 	read_from_device(inbuffer, 2);
 	//hexdump(inbuffer, 2);
-	
+
 	if(require_erase || require_download)
 	{
 		printf("Now performing erase...\n");
-		for(i = 0; i < 10; i++)
-		{
+		for(i = 0; i < (device_flash_size / 1024); i++)
+		{ /* TODO: I'm not sure the erase command works or not, because now I just have CH551 */
 			erase_page_cmd[3] = i * 4;
 			write_to_device(erase_page_cmd, 4);
 			read_from_device(inbuffer, 2);
-			//hexdump(erase_page_cmd, 4);	
+			//hexdump(erase_page_cmd, 4);
 			if(inbuffer[0] != 0x00)
 			{
 				fprintf(stderr, "Erase failed!\n");
@@ -254,30 +271,30 @@ int main(int argc, char **argv)
 		}
 		printf("Erase done\n");
 	}
-		
+
 	if(require_download)
 	{
 		i = file_length;
-		
+
 		int curr_addr = 0;
 		int pkt_length;
-	
+
 		printf("Writting Flash\n");
-	
+
 		while(curr_addr < file_length)
 		{
 			pkt_length = i >= 0x3c? 0x3c: i;
 			write_cmd[1] = pkt_length;
 			write_cmd[2] = curr_addr & 0xff;
 			write_cmd[3] = (curr_addr >> 8) & 0xff;
-		
+
 			memcpy(write_cmd + 4, file_buffer + curr_addr, pkt_length);
 			write_to_device(write_cmd, 64);
 			read_from_device(inbuffer, 2);
 			//hexdump(inbuffer, 2);
-		
+
 			//printf("Write to addr %d, pkt_length %d\n", curr_addr, pkt_length);
-		
+
 			curr_addr += pkt_length;
 			i -= pkt_length;
 
@@ -286,32 +303,32 @@ int main(int argc, char **argv)
 				fprintf(stderr, "Write failed!\n");
 				goto out;
 			}
-		
+
 		}
 		printf("Write done\n");
-	
+
 		i = file_length;
-	
+
 		curr_addr = 0;
-	
+
 		printf("Verifing Flash\n");
-	
+
 		while(curr_addr < file_length)
 		{
 			pkt_length = i >= 0x3c? 0x3c: i;
 			verify_cmd[1] = pkt_length;
 			verify_cmd[2] = curr_addr & 0xff;
 			verify_cmd[3] = (curr_addr >> 8) & 0xff;
-		
+
 			memcpy(verify_cmd + 4, file_buffer + curr_addr, pkt_length);
 			//memset(verify_cmd + 4, 0xff, pkt_length);
-		
+
 			write_to_device(verify_cmd, 64);
 			read_from_device(inbuffer, 2);
 			//hexdump(inbuffer, 2);
-		
+
 			//printf("Verify addr %d\n", curr_addr);
-		
+
 			curr_addr += pkt_length;
 			i -= pkt_length;
 
@@ -320,14 +337,14 @@ int main(int argc, char **argv)
 				fprintf(stderr, "Verify failed!\n");
 				goto out;
 			}
-		
+
 		}
 		printf("Verify done\n");
 	}
 	if(require_dataflash_read)
 	{
 		printf("Read from chip data flash\n");
-		
+
 		fp = fopen(df_read_file_name, "wb+");
 		if(!fp)
 		{
@@ -335,16 +352,16 @@ int main(int argc, char **argv)
 			goto out;
 		}
 		write_to_device(read_df_cmd, 2);
-		
+
 		read_from_device(inbuffer, 64);
 		fwrite(inbuffer, 1, 64, fp);
 		read_from_device(inbuffer, 64);
 		fwrite(inbuffer, 1, 64, fp);
 		fclose(fp);
 		fp = 0;
-		
+
 		printf("Read done\n");
-		
+
 	}
 	if(require_dataflash_erase || require_dataflash_write)
 	{
@@ -352,22 +369,22 @@ int main(int argc, char **argv)
 		read_from_device(inbuffer, 2);
 		write_to_device(key_input_cmd, 6); /* Input a dummy key that let we doesn't need to 'encrypt' */
 		read_from_device(inbuffer, 2);
-		
+
 		printf("Erasing device's data flash\n");
 		write_to_device(erase_df_cmd, 4); /* Erase DF */
-		read_from_device(inbuffer, 2);	
-		
+		read_from_device(inbuffer, 2);
+
 		if(inbuffer[0] != 0x00)
 		{
 			fprintf(stderr, "Erase data flash failed!\n");
 			goto out;
-		}	
-		
+		}
+
 		printf("Erase done\n");
 	}
-	
+
 	if(require_dataflash_write)
-	{	
+	{
 
 		fp = fopen(df_write_file_name, "rb");
 		if(!fp)
@@ -377,49 +394,49 @@ int main(int argc, char **argv)
 		}
 		fseek(fp, 0, SEEK_END);
 		file_length = ftell(fp);
-		
-		if(file_length > 128)
+
+		if(file_length > device_dataflash_size)
 		{
-			fprintf(stderr, "File size exceeded 128 bytes!\n");
+			fprintf(stderr, "File size exceeded device's capacity!\n");
 			goto out;
 		}
-		
+
 		if(file_buffer) free(file_buffer);
 		file_buffer = malloc(file_length);
-	
+
 		if(file_buffer == 0)
 		{
 			fprintf(stderr, "Can't allocate memory!\n");
 			exit(1);
 		}
-		printf("Data flash Binary length %d\n", file_length);		
+		printf("Data flash Binary length %d\n", file_length);
 		fseek(fp, 0, SEEK_SET);
-	
+
 		fread(file_buffer, 1, file_length, fp);
 		fclose(fp);
 		fp = 0;
-		
+
 		printf("Flashing device's data flash\n");
 
 		i = file_length;
-		
+
 		int curr_addr = 0;
 		int pkt_length;
-	
+
 		while(curr_addr < file_length)
 		{
 			pkt_length = i >= 0x3c? 0x3c: i;
 			write_df_cmd[1] = pkt_length;
 			write_df_cmd[2] = curr_addr & 0xff;
 			write_df_cmd[3] = (curr_addr >> 8) & 0xff;
-		
+
 			memcpy(write_df_cmd + 4, file_buffer + curr_addr, pkt_length);
 			write_to_device(write_df_cmd, 64);
 			read_from_device(inbuffer, 2);
 			//hexdump(inbuffer, 2);
-		
+
 			//printf("Write to addr %d, pkt_length %d\n", curr_addr, pkt_length);
-		
+
 			curr_addr += pkt_length;
 			i -= pkt_length;
 
@@ -428,11 +445,11 @@ int main(int argc, char **argv)
 				fprintf(stderr, "Write data flash failed!\n");
 				goto out;
 			}
-		
+
 		}
-		printf("Write data flash done\n"); 
+		printf("Write data flash done\n");
 		printf("Verifing data flash\n");
-		
+
 		write_to_device(read_df_cmd, 2);
 		read_from_device(inbuffer, 64);
 		if(memcmp(inbuffer, file_buffer, file_length > 64? 64: file_length) != 0)
@@ -451,15 +468,15 @@ int main(int argc, char **argv)
 		}
 		printf("Verify data flash done\n");
 	}
-	
+
 	if(require_exec)
 	{
 		printf("Let target run, keep it at Hong Kong reporter speed!\n");
 		write_to_device(run_cmd, 4);
 	}
-	
+
 	printf("\nExcited! 0..0\n");
-	
+
 out:
 	if(file_buffer)
 		free(file_buffer);
