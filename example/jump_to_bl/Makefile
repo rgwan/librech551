@@ -7,5 +7,5 @@ jump_to_bl.ihx: jump_to_bl.c
 clean:
 	rm -f *.asm *.ihx *.lk *.lst *.bin *.map *.mem *.rel *.rst *.sym
 	
-flash:
+flash: jump_to_bl.bin
 	wchisptool -f jump_to_bl.bin -g
