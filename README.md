@@ -12,9 +12,9 @@ If someone want to help me, please fork, and support more chips, Thanks!
 Build & Usage
 ----------
 
-Build:Type 'make' in "usbisp" directory.
+Build: Type 'make' in "usbisp" directory.
 
-Install: Copy wchisptool to PATH by yourself.
+Install:Type 'make install' in 'usbisp' directory, you can also pass DESTDIR to the script to describe installation path. 
 
 In Linux, there's no driver required.
 
