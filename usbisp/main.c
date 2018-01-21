@@ -216,9 +216,15 @@ int main(int argc, char **argv)
 	
 	if(inbuffer[0] == 0x51)
 		printf("Detected device CH551\n");
+	else if(inbuffer[0] == 0x52)
+		printf("Detected device CH552\n");
+	else if(inbuffer[0] == 0x53)
+		printf("Detected device CH553\n");
+	else if(inbuffer[0] == 0x54)
+		printf("Detected device CH554\n");
 	else
 	{
-		fprintf(stderr, "This chip is currently not support in this program\n");
+		fprintf(stderr, "The chip id 0x%02X is currently not support in this program\n", inbuffer[0]);
 		goto out;
 	}
 
