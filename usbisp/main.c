@@ -210,6 +210,8 @@ int main(int argc, char **argv)
 		fprintf(stderr, "The chip id 0x%02X is currently not support in this program\n", inbuffer[0]);
 		goto out;
 	}
+	printf("Device rom capacity %d, data flash capacity %d\n",
+		device_flash_size, device_dataflash_size);
 
 	if(require_download)
 	{
@@ -258,7 +260,7 @@ int main(int argc, char **argv)
 	{
 		printf("Now performing erase...\n");
 		for(i = 0; i < (device_flash_size / 1024); i++)
-		{ /* TODO: I'm not sure the erase command works or not, because now I just have CH551 */
+		{
 			erase_page_cmd[3] = i * 4;
 			write_to_device(erase_page_cmd, 4);
 			read_from_device(inbuffer, 2);

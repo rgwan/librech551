@@ -1,11 +1,11 @@
 LibreCH551
 ----------
 
-A libre open-source flasher program and SDK library for WCH(Nanjing QinHeng Corp.)'s USB microcontroller CH551.
+A libre open-source flasher program and SDK library for WCH(Nanjing QinHeng Corp.)'s USB microcontroller CH55x.
 
-The CH551 is a extremely low-cost 8051 USB microcontroller which about 1.5 CNY in retail. It is suitable for many low-end USB applications.
+The CH55x series microcontroller is extremely low-cost 8051 USB microcontroller series, the cheapest one, CH551, which about 1.5 CNY in retail. It is suitable for many low-end USB applications.
 
-Currently working in progress, but all functions is working on CH551 except option bytes. I would like to support CH55x series microcontroller.
+Currently we have tested out CH551 and CH554 device, all functions works fine except option byte.
 
 If someone want to help me, please fork, and support more chips, Thanks!
 
