@@ -54,3 +54,6 @@ Ankh.NoLoad
 
 #Visual Studio Code files
 .vscode/
+
+#Libusb headers and libs
+libusb/

@@ -9,7 +9,15 @@
 
 #ifdef _MSC_VER
 // MSVC
-#include "..\msvc\libusb\libusb.h"
+
+#include "..\msvc\libusb\include\libusb-1.0\libusb.h"
+#ifdef _WIN64
+#pragma comment(lib, "libusb\\MS64\\dll\\libusb-1.0.lib")
+#else
+#pragma comment(lib, "libusb\\MS32\\dll\\libusb-1.0.lib")
+#endif
+
+// POSIX getopt()
 #include "..\msvc\getopt.h"
 #else
 // Linux GCC
