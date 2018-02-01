@@ -1,12 +1,29 @@
-#include <unistd.h>
+#ifdef _MSC_VER
+#include "..\msvc\stdafx.h"
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
 
+#ifdef _MSC_VER
+// MSVC
+
+#include "..\msvc\libusb\include\libusb-1.0\libusb.h"
+#ifdef _WIN64
+#pragma comment(lib, "libusb\\MS64\\dll\\libusb-1.0.lib")
+#else
+#pragma comment(lib, "libusb\\MS32\\dll\\libusb-1.0.lib")
+#endif
+
+// POSIX getopt()
+#include "..\msvc\getopt.h"
+#else
+// Linux GCC
 #include <libusb-1.0/libusb.h>
 #include <unistd.h>
-
+#endif
 
 #define VENDOR_ID	0x4348
 #define PRODUCT_ID	0x55e0 /* CH551 Bootloader VID-PID pair */
