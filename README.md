@@ -30,7 +30,9 @@ __Driver Installation__
 2. Launch zadig (included in `Windows_Tools.zip`), open `Options` menu and click `List All Devices`, 
 you should be able to find your CH55x (Usually names `USB Module`), optionally you can change its name by check the `Edit` box. 
 3. Double check that the USB ID is correct, USB ID is VID plus PID, for CH554, the USB ID is `4348 55E0`.
-4. Select `libusbK` and click `Install Driver`, quit Zadig after driver installation.
+4. Select `libusb-win32` and click `Install Driver`, quit Zadig after driver installation.
+* Note: due to unknown reason, sometimes the `libusbK` driver won't work on some machine with very new USB 3.1 controller. 
+If your PC can not recognize the USB ISP device, try `winusb` or `libusb-win32` instead.
 
 __Build Executables__
 * Generate EXE file for Microsoft Windows requires __Microsoft Visual Studio 2017__ and __Windows Kits 10.0.15063.0 or above__.
