@@ -2,7 +2,7 @@ LibreCH551
 ----------
 
 An __open-source__ command line flasher program and SDK library for WCH(Nanjing QinHeng Corp.)'s CH55x family.
-[Our Wiki contains a lot of useful tips, it's worth to check out!](wiki/Home)
+[Our Wiki contains a lot of useful tips, it's worth to check out!](../../wiki/Home)
 
 The CH55x is a series of 8051 microcontroller with dedicated USB peripheral. CH553/CH554 can be programmed as a USB host.
 The cheapest one, CH551 only costs 1.5 CNY in retail. It is the ultimate and ideal solution for many low-end USB applications.
@@ -14,7 +14,7 @@ If someone want to help me, please __start__, __fork__ and support more chips, T
 Command Line Parameters
 ------------
 * __-f \<filename\>__ Erase the code flash and download binary codes to CH55x, note that this tool only accepts `.bin` files, `.hex` files cannot be used directly. 
-The Eclipse SDCC environment with the setup [described in our wiki](wiki/Setup-SDCC-developing-environment-with-Eclipse) automatically generates `.bin` file. To convert a hex file to bin file, on Linux, use `objdump`, on Windows, use `hex2bin.exe` provided in `tools`.
+The Eclipse SDCC environment with the setup [described in our wiki](../../wiki/Setup-SDCC-developing-environment-with-Eclipse) automatically generates `.bin` file. To convert a hex file to bin file, on Linux, use `objdump`, on Windows, use `hex2bin.exe` provided in `tools`.
 * __-g__ Execute the user program after downloading
 * __-e__ Erase chip only
 * __-D \<filename\>__ Read data flash to a file
@@ -29,7 +29,7 @@ For Linux Users
 
 For Windows Users
 ----------
-* Tool pack for Windows `Windows_Tools.zip` are avaliable in [the librech551 release page](releases).
+* Tool pack for Windows `Windows_Tools.zip` are avaliable in [the librech551 release page](../../releases).
 * On Windows, CH554 ISP mode requires a libusb driver implementation to enable direct device access for librech551.
 
 __Driver Installation__
