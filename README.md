@@ -13,8 +13,8 @@ If someone want to help me, please __start__, __fork__ and support more chips, T
 
 Command Line Parameters
 ------------
-* __-f \<filename\>__ Erase the code flash and download binary codes to CH55x, note that this tool only accepts `.bin` files, `.hex` files cannot be used directly. 
-The Eclipse SDCC environment with the setup [described in our wiki](../../wiki/Setup-SDCC-developing-environment-with-Eclipse) automatically generates `.bin` file. To convert a hex file to bin file, on Linux, use `objdump`, on Windows, use `hex2bin.exe` provided in `tools`.
+* __-f \<filename\>__ Erase the code flash and download binary codes to CH55x, note that this tool only accepts `.bin` files, `.hex` files will not be accepted.
+The Eclipse SDCC environment with the setup [described in our wiki](../../wiki/Setup-SDCC-developing-environment-with-Eclipse) automatically generates `.bin` file. To convert a hex file to bin file, on Linux, use `objdump`, on Windows, use `hex2bin.exe` in [`win_tools.zip`](../../wiki/win_tools.zip).
 * __-g__ Execute the user program after downloading
 * __-e__ Erase chip only
 * __-D \<filename\>__ Read data flash to a file
@@ -29,12 +29,14 @@ For Linux Users
 
 For Windows Users
 ----------
-* Tool pack for Windows `Windows_Tools.zip` are avaliable in [the librech551 release page](../../releases).
+* The Tool pack for Windows is avaliable [here](../../wiki/win_tools.zip).
+* The wiki page "[Setup SDCC developing environment with Eclipse](../../wiki/Setup-SDCC-developing-environment-with-Eclipse)" demonstrates how to setup an IDE for better code editing.
 * On Windows, CH554 ISP mode requires a libusb driver implementation to enable direct device access for librech551.
 
 __Driver Installation__
+
 1. Connect your CH55x to one of USB ports on your PC, make sure the MCU enters ISP mode.
-2. Launch zadig (included in `Windows_Tools.zip`), open `Options` menu and click `List All Devices`, 
+2. Launch zadig (included in [`win_tools.zip`](../../wiki/win_tools.zip)), open `Options` menu and click `List All Devices`, 
 you should be able to find your CH55x (Usually names `USB Module`), optionally you can change its name by check the `Edit` box. 
 3. Double check that the USB ID is correct, USB ID is VID plus PID, for CH554, the USB ID is `4348 55E0`.
 4. Select `libusb-win32` and click `Install Driver`, quit Zadig after driver installation.
