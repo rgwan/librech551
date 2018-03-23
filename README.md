@@ -11,6 +11,11 @@ Up to now, we have tested out CH551 and CH554, all functions work fine except op
 
 If someone want to help me, please __start__, __fork__ and support more chips, Thanks!
 
+
+TODO
+------------
+Implement UART programming function for CH554 working on USB Host mode.
+
 Command Line Parameters
 ------------
 * __-f \<filename\>__ Erase the code flash and download binary codes to CH55x, note that this tool only accepts `.bin` files, `.hex` files will not be accepted.
