@@ -1,40 +1,9 @@
-========================================================================
-    CONSOLE APPLICATION : librech551 Project Overview
-========================================================================
-
-AppWizard has created this librech551 application for you.
-
-This file contains a summary of what you will find in each of the files that
-make up your librech551 application.
-
-
-librech551.vcxproj
-    This is the main project file for VC++ projects generated using an Application Wizard.
-    It contains information about the version of Visual C++ that generated the file, and
-    information about the platforms, configurations, and project features selected with the
-    Application Wizard.
-
-librech551.vcxproj.filters
-    This is the filters file for VC++ projects generated using an Application Wizard. 
-    It contains information about the association between the files in your project 
-    and the filters. This association is used in the IDE to show grouping of files with
-    similar extensions under a specific node (for e.g. ".cpp" files are associated with the
-    "Source Files" filter).
-
-librech551.cpp
-    This is the main application source file.
-
-/////////////////////////////////////////////////////////////////////////////
-Other standard files:
-
-StdAfx.h, StdAfx.cpp
-    These files are used to build a precompiled header (PCH) file
-    named librech551.pch and a precompiled types file named StdAfx.obj.
-
-/////////////////////////////////////////////////////////////////////////////
-Other notes:
-
-AppWizard uses "TODO:" comments to indicate parts of the source code you
-should add to or customize.
-
-/////////////////////////////////////////////////////////////////////////////
+Build Executables
+Generate EXE file for Microsoft Windows requires Microsoft Visual Studio 2017 and Windows Kits 10.0.15063.0 or above. 
+If your system does not meet the stated requirement, go to Microsoft's website and download the installer for Microsoft Visual Studio 2017 Community Version (for free).
+Note: It is possible to compile the source with legacy Visual Studio although it is not officially supported.
+1.Download the entire repository and unzip to anywhere you like
+2.Navigate to "msvc"  folder and create a folder called "libusb" under "msvc" directory
+3.Go to https://github.com/libusb/libusb/releases to get the latest stable binary snapshots of libusb(e.g. libusb v1.0.21), 
+download the file with extension "7z"  or "tar.bz" , then unzip it to "msvc\libusb" . Now your "msvc\libusb"  should contain at least these folders : "MS32", "MS64" and "include" 
+4.Launch "msvc\librech551.sln" and choose your targeting platform (e.g. Release x64), then start compiling.
