@@ -14,7 +14,11 @@ If someone want to help me, please __start__, __fork__ and support more chips, T
 
 TODO
 ------------
-Implement UART programming function for CH554 working on USB Host mode.
+Implement UART programming function for CH554 working on USB Host mode (It is very simple to realize: just add serial port interface to the program and 0x619e, accumulate checksum in packet tail).
+
+Implement new CH55x ISP protocol (bootloader version > 2.30), now we have no chip shipped with new bootloader: WCH's FAE said that they will send chips with new bootloader after Apr.2018.
+
+Contributions are always welcome.
 
 Command Line Parameters
 ------------
