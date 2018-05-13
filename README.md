@@ -14,11 +14,11 @@ If someone want to help me, please __start__, __fork__ and support more chips, T
 
 TODO
 ------------
-Implement UART programming function for CH554 working on USB Host mode (It is very simple to realize: just add serial port interface to the program and 0x619e, accumulate checksum in packet tail).
+Implement chip programming via UART for devices workign on USB Host mode. (It is very simple to realize: just add serial port interface to the program and 0x619e, accumulate checksum in packet tail).
 
-Implement new CH55x ISP protocol (bootloader version > 2.30), now we have no chip shipped with new bootloader: WCH's FAE said that they will send chips with new bootloader after Apr.2018.
+Implement new CH55x ISP protocol (for bootloader version > 2.30), for now we don't have any chip shipped with the new bootloader: WCH's FAE said that they will release chips with new bootloader after Apr.2018.
 
-Contributions are always welcome.
+__Contributions are always welcome__
 
 Command Line Parameters
 ------------
@@ -28,6 +28,7 @@ The Eclipse SDCC environment with the setup [described in our wiki](../../wiki/S
 * __-e__ Erase chip only
 * __-D \<filename\>__ Read data flash to a file
 * __-d \<filename\>__ Write the content of a file to data flash
+* __-h__ Display help message
 
 For Linux Users
 ----------
@@ -60,6 +61,7 @@ If your system does not meet the stated requirement, go to Microsoft's website a
 2. Navigate to `msvc` folder and create a folder called `libusb` under `msvc` directory
 3. Go to <https://github.com/libusb/libusb/releases> to get the latest __stable__ binary snapshots of libusb(e.g. [libusb v1.0.21](https://github.com/libusb/libusb/releases/tag/v1.0.21)), download the file with extension `7z` or `tar.bz`, then unzip it to `msvc\libusb`. Now your `msvc\libusb` should contain at least these folders : `MS32`, `MS64` and `include`
 4. Launch `msvc\librech551.sln` and choose your targeting platform (e.g. Release x64), then start compiling.
+* (Windows version only) To remove VC runtime dependency, releases on Github release page is built on Visual C++ together with [`VC-LTL`](https://github.com/Chuyu-Team/VC-LTL).
 
 License
 ----------
