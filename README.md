@@ -39,7 +39,7 @@ For Linux Users
 
 For Windows Users
 ----------
-* The Tool pack for Windows is avaliable [here](../../wiki/win_tools.zip).
+* The Tool pack for Windows is available [here](../../wiki/win_tools.zip).
 * The wiki page "[Setup SDCC developing environment with Eclipse](../../wiki/Setup-SDCC-developing-environment-with-Eclipse)" demonstrates how to setup an IDE for better code editing.
 * On Windows, CH554 ISP mode requires a libusb driver implementation to enable direct device access for librech551.
 
