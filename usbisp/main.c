@@ -280,6 +280,12 @@ int main(int argc, char **argv)
 			device_flash_size = 14336;
 			device_dataflash_size = 128;
 		}
+		else if(inbuffer[0] == 0x59)
+		{
+			printf("Detected device CH559\n");
+			device_flash_size = 61440;
+			device_dataflash_size = 1024;
+		}
 		else
 		{
 			fprintf(stderr, "The chip id 0x%02X is currently not support in this program\n", inbuffer[0]);
