@@ -227,7 +227,7 @@ int main(int argc, char **argv)
 
 	/* Set debugging output to max level.
 	 */
-	libusb_set_debug(NULL, 3);
+	libusb_set_option(NULL, LIBUSB_OPTION_LOG_LEVEL, LIBUSB_LOG_LEVEL_INFO);
 
 	/* Look for a specific device and open it.
 	 */
