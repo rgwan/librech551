@@ -209,7 +209,7 @@ int main(int argc, char **argv)
 			case 'n':
 				require_protocol_v2 = 1;
 				break;
-			vdefault:
+			default:
 				printusage(argv[0]);
 				exit(0);
 				break;
