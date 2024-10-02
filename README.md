@@ -1,6 +1,12 @@
 LibreCH551
 ----------
 
+THIS TOOL IS NOT DEVELOPED ANY MORE. USE https://github.com/ch32-rs/wchisp INSTEAD!
+
+
+
+
+Old readme:
 An __open-source__ command line flasher program and SDK library for WCH(Nanjing QinHeng Corp.)'s CH55x family.
 [Our Wiki contains a lot of useful tips, it's worth to check out!](../../wiki/Home)
 
